@@ -9,6 +9,8 @@ twitter_username: jcgpelaez
 github_username:  jgpelaez
 linkedin_username:  jgpelaez
 
+permalink: /:title/
+
 markdown: redcarpet
 redcarpet:
   extensions: ['smart', 'superscript']
