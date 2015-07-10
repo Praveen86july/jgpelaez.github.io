@@ -1,0 +1,54 @@
+---
+layout: typo
+---
+<!doctype html>
+<html lang="{{ page.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=0.85">
+  <meta name="description" content="{% if page.desc %}{{ page.desc | strip_html }}{% else %}{{ page.excerpt | strip_html | replace: "[[", " ("  | replace: "]]", ")" }}{% endif %}">
+  <title>{{page.title | strip_html}} – Sylvain Durand</title>
+  <link rel="icon" href="/medias/design/favicon.ico" />
+  {% assign posts=site.posts | where:"date", page.date %}
+  {% for post in posts %}
+    {% if post.lang != page.lang %}
+      <link rel="alternate" hreflang="{{post.lang}}" href="{{post.url}}" />
+    {% endif %}
+  {% endfor %}
+  <link rel="alternate" href="/rss.xml" type="application/rss+xml" />
+  <style>{% capture styles %}{% include style.sass %}{% endcapture %}{{ styles | sassify }}</style>
+  {% include head.html %}
+</head>
+
+<body class="{{ page.lang }}{% if page.type == 'pages' %} page{% endif %}">
+
+<div class="nav">
+  <ul>
+    {% for menu in site.data.navigation[page.lang] %}
+      <li><a href="{{ menu[1].url }}">{{ menu[1].title }}</a></li>
+    {% endfor %}
+    <li class="lang">
+      {% assign posts=site.posts | where:"date", page.date | sort: 'path' %}
+      {% for post in posts %}
+        <a href="{{ post.url }}" class="{{ post.lang }}">{{ post.lang }}</a>
+      {% endfor %}
+    </li>
+  </ul>
+</div>
+
+<h1>{{ page.title }}</h1>
+
+<div class="article">
+{% if page.type != 'pages' %}
+<p class="date">
+    {% include date.html date=page.date %}
+</p>
+{% endif %}
+{{ content }}
+<hr/>
+</div>
+
+{% include footer.html %}
+    
+</body>
+</html>
