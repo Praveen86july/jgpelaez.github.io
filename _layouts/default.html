@@ -9,19 +9,7 @@ layout: typo
 
 <body class="{{ page.lang }}{% if page.type == 'pages' %} page{% endif %}">
 
-<div class="nav">
-  <ul>
-    {% for menu in site.data.navigation[page.lang] %}
-      <li><a href="{{ menu[1].url }}">{{ menu[1].title }}</a></li>
-    {% endfor %}
-    <li class="lang">
-      {% assign posts=site.posts | where:"date", page.date | sort: 'path' %}
-      {% for post in posts %}
-        <a href="{{ post.url }}" class="{{ post.lang }}">{{ post.lang }}</a>
-      {% endfor %}
-    </li>
-  </ul>
-</div>
+{% include nav.html %}
 
 <h1>{{ page.title }}</h1>
 
@@ -32,7 +20,7 @@ layout: typo
 </p>
 {% endif %}
 {{ content }}
-<hr/>
+
 </div>
 
 {% include footer.html %}
