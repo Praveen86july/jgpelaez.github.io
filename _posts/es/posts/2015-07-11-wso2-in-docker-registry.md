@@ -7,15 +7,25 @@ author:     "Juan Carlos G. Peláez"
 comments: true
 ---
 
+## Introducción
+
 Una vez que conocemos como generar una imagen de Docker, si quieres compartir esta imagen con tu equipo, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
 
 Una de las grandes ventajas que nos permitirá el registro es el de poder testear las diferentes versiones de un producto con la sola modificación de la imagen a descargar si estas están en el registro.
 
-Podemos instalar un registro privado o bien utilizar el [registro público disponible en Docker](https://registry.hub.docker.com/). Este registro puede ser utilizado por cualquier usuario, en este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
+Podemos instalar un registro privado o bien utilizar el [registro público disponible en Docker](https://registry.hub.docker.com/). Este registro puede ser utilizado por cualquier usuario, y podemos realizar búsquedas para comprobar si otro usuario ha añadido la imagen que deseamos.
 
-### Prerequisitos
-...
-.
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/search-docker-registry.png)
+
+Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el Dockerfile, si han sido subidas directamente por usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
+
+Para el uso en producción de Docker es recomendable crear nuestras propias imágenes ya que las imágenes del registro pueden ser eliminadas por el usuario que las ha subido en cualquier momento. También se recomienda usar las imágenes marcadas como oficial, estas han sido elaboradas bien por el vendedor, por el equipo de Docker, o por usuarios con mucha popularidad.
+
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-official-repo.png)
+
+En este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
+
+## Utilizando el registro público de Docker
 
 Primero crearemos un repositorio público en github o bitbucket, o bien hacemos un [fork de uno existente] (https://github.com/jgpelaez/docker-wso2-esb.git).
 
