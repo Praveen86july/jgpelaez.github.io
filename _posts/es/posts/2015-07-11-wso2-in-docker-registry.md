@@ -9,7 +9,7 @@ comments: true
 
 ## Introducción
 
-Una vez que conocemos como (generar una imagen de Docker) [https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/], si queremos compartir esta imagen con el equipo, o bien utilizarla para diferentes entornos, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. 
+Una vez que conocemos como [generar una imagen de Docker] (https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/), si queremos compartir esta imagen con el equipo, o bien utilizarla para diferentes entornos, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. 
 Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
 
 Una de las grandes ventajas que nos permitirá el registro es el de poder testear las diferentes versiones de un producto con la sola modificación de la imagen a descargar si estas están en el registro.
@@ -102,7 +102,7 @@ https://localhost:19443/carbon/admin/login.jsp
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-wso2-esb-admin.png)
 
-El host a indicar en la url dependerá del sistema en el que ejecutemos docker. Si tiene de forma nativa docker (ubuntu, redhat, etc), será localhost, si utilizamos boot2docker (windows/mac), será la ip de la máquina virtual creada por (boot2docker) [http://boot2docker.io/] (por defecto suele ser 192.168.59.103).
+El host a indicar en la url dependerá del sistema en el que ejecutemos docker. Si tiene de forma nativa docker (ubuntu, redhat, etc), será localhost, si utilizamos boot2docker (windows/mac), será la ip de la máquina virtual creada por [boot2docker] (http://boot2docker.io/) (por defecto suele ser 192.168.59.103).
 
 Entre muchas otras opciones podriamos probar los ejemplos del wso2 mediante la instrucción:
 
