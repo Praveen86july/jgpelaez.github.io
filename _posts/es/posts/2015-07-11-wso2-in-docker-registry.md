@@ -9,7 +9,8 @@ comments: true
 
 ## Introducción
 
-Una vez que conocemos como generar una imagen de Docker, si quieres compartir esta imagen con tu equipo, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
+Una vez que conocemos como (generar una imagen de Docker) [https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/], si queremos compartir esta imagen con el equipo, o bien utilizarla para diferentes entornos, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. 
+Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
 
 Una de las grandes ventajas que nos permitirá el registro es el de poder testear las diferentes versiones de un producto con la sola modificación de la imagen a descargar si estas están en el registro.
 
@@ -17,32 +18,32 @@ Podemos instalar un registro privado o bien utilizar el [registro público dispo
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/search-docker-registry.png)
 
-Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el Dockerfile, si han sido subidas directamente por usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
+Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el Dockerfile, si han sido subidas directamente por un usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
 
-Para el uso en producción de Docker es recomendable crear nuestras propias imágenes ya que las imágenes del registro pueden ser eliminadas por el usuario que las ha subido en cualquier momento. También se recomienda usar las imágenes marcadas como oficial, estas han sido elaboradas bien por el vendedor, por el equipo de Docker, o por usuarios con mucha popularidad.
+Para el uso en producción de Docker es recomendable crear nuestras propias imágenes ya que las imágenes del registro pueden ser eliminadas por el usuario que las ha subido. También se recomienda usar las imágenes marcadas como oficiales, estas han sido elaboradas bien por el vendedor, por el equipo de Docker, o por usuarios con mucha popularidad.
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-official-repo.png)
 
 En este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
 
-## Utilizando el registro público de Docker
+## Creación de imágenes en el registro público de Docker
 
-Primero crearemos un repositorio público en github o bitbucket, o bien hacemos un [fork de uno existente] (https://github.com/jgpelaez/docker-wso2-esb.git).
+Primero crearemos un repositorio público en github o bitbucket, o bien haremos un [fork de uno existente] (https://github.com/jgpelaez/docker-wso2-esb.git).
 
 A este repositorio añadiremos el fichero/s Dockerfile:
 
 ```docker
-FROM java:openjdk-8-jre
+FROM java:openjdk-7
 
 MAINTAINER juancarlosgpelaez@gmail.com
 
-ENV WSO2_URL=http://https://s3-us-west-2.amazonaws.com/wso2-stratos
+ENV WSO2_URL=https://s3-us-west-2.amazonaws.com/wso2-stratos
 ENV WSO2_SOFT_VER=4.8.1
 RUN  \
-	mkdir -p /opt/wso2 && \
-	wget -P /opt/wso2 $WSO2_URL/$WSO2_SOFT_VER/wso2esb-$WSO2_SOFT_VER.zip && \
-    unzip /opt/wso2/wso2esb-$WSO2_SOFT_VER.zip -d /opt/wso2 && \
-    rm /opt/wso2/wso2esb-$WSO2_SOFT_VER.zip
+	mkdir -p /opt && \
+	wget -P /opt $WSO2_URL/wso2esb-$WSO2_SOFT_VER.zip && \
+    unzip /opt/wso2esb-$WSO2_SOFT_VER.zip -d /opt && \
+    rm /opt/wso2esb-$WSO2_SOFT_VER.zip
 
 # ESB https port
 EXPOSE 9443
@@ -51,37 +52,83 @@ EXPOSE 8280
 # ESB https pass-through transport port
 EXPOSE 8243
 
-CMD ["/opt/wso2/wso2esb-4.8.1/bin/wso2server.sh"]
+ENV JAVA_HOME=/usr
+CMD ["/opt/wso2esb-4.8.1/bin/wso2server.sh"]
 ```
 
-Crearemos un usuario en el registro de docker https://registry.hub.docker.com/.
+Crearemos un usuario en el [registro de docker] (https://registry.hub.docker.com/)
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 20:33:25.png)
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-signup.png)
 
 
 Podemos utilizar nuestro usuario de GitHub para realizar el registro.
 
-Una vez creada la cuenta podremos crear un nuevo repositorio, con construcción automática:
+Una vez creada la cuenta podremos crear un nuevo repositorio, con construcción automática, el registro leerá nuestro Dockerfile y automáticamente realizará la construcción:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 20:36:43.png)
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repositories.png)
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 20:37:31.png)
+Elegimos nuestra cuenta de bitbucket o de github:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 20:38:00.png)
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source.png)
 
-Podremos selecionar el directorio en el que se encuentra el Dockerfile. En nuestro caso añadiremos varios Dockerfile para cada versión del ESB de WSO2.
+Y seleccionamos el repositorio en el que se encuentra el/los Dockerfile/s:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 20:38:49.png)
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source-repository.png)
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/Screenshot from 2015-07-11 23:50:01.png)
+Podremos selecionar el directorio en el que se encuentra el Dockerfile. En nuestro caso añadiremos varios Dockerfile para diferentes versiones del ESB de WSO2. 
+También podremos cambiar el nombre del repositorio, la convención que utilizamos es para el repositorio en git docker-[vendedor]-[software] y para el registro de docker [vendedor]-[software].
+
+![Creación del repositorio](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repository-creation.png)
+
+La construcción se puede ejecutar manualmente, aunque normalmente no será necesario, ya que cuando modificamos un fichero en nuestro repositoria de git, se ejecuta automáticamente la construcción.
+
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repository-build-details.png)
+
+## Utilizando el registro público de Docker
+
+Una vez tenemos las imágenes creadas o bien queremos probar una nueva imagen subida por otro usuario podremos hacerlo con la instrucción run, por ejemplo:
+
+```
+docker run -p 19443:9443 jgpelaez/wso2-esb
+```
+
+Así estaremos indicando que ejecute una instancia del contenedor, el puerto del contenedor 9443 será expuesto al host por el puerto 19443 y la etiqueta utilizada será ´latest´. Para poder ver más parámetros de ejecución podemos ver la ayuda con ´docker run --help´.
+
+En este caso podremos ver la consola de administración con la url en el navegador:
+
+```
+https://localhost:19443/carbon/admin/login.jsp
+```
+
+![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-wso2-esb-admin.png)
+
+El host a indicar en la url dependerá del sistema en el que ejecutemos docker. Si tiene de forma nativa docker (ubuntu, redhat, etc), será localhost, si utilizamos boot2docker (windows/mac), será la ip de la máquina virtual creada por (boot2docker) [http://boot2docker.io/] (por defecto suele ser 192.168.59.103).
+
+Entre muchas otras opciones podriamos probar los ejemplos del wso2 mediante la instrucción:
+
+```
+docker run -p 19443:9443 jgpelaez/wso2-esb /opt/wso2esb-4.8.1/bin/wso2esb-samples.sh -sn [sample number]
+```
+
+Una gran ventaja que nos proporciona docker es que podemos ejecutar diferentes instancias del mismo contenedor cambiando el puerto del host, utilizando siempre uno libre, o con la opcion '-P' que asignará automáticamente un puerto libre. Podremos ver las ejecuciones de los contenedores con la instrucción 
+
+```
+docker ps
+```
+
+```
+CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS              PORTS                                        NAMES
+dbfa29da863f        jgpelaez/wso2-esb   "/opt/wso2esb-4.8.1/   44 minutes ago      Up 44 minutes       8243/tcp, 8280/tcp, 0.0.0.0:9443->9443/tcp   happy_goodall      
+```	
+
+## Conclusión
+
+El uso de contenedores linux (en este caso Docker) y de un registro de imágenes nos puede ayudar mucho para conseguir entornos aislados y repetibles. 
+El registro de Docker o un registro privado nos podrá ayudar para que en el desarrollo todos los miembros del equipo trabajen con la misma configuración.
+Desde una perspectiva DevOps, si utilizamos imágenes de Docker para desarrollo, test y producción con un registro, estaremos testeando en un entorno muy similar en todas las fases del proyecto/producto, y minizaremos los errores de configuración que puedan llegar a producción.
 
 
+## Recursos
 
-
-
-## TODO
-
-### TODO
-
-TODO
-
+- Código fuente en [github/jgpelaez] (https://github.com/jgpelaez/docker-wso2-esb.git).
+-  Imágen del wso2 esb en [repositorio docker] (https://registry.hub.docker.com/u/jgpelaez/wso2-esb/) 

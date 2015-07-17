@@ -1,10 +1,10 @@
 # Site settings
-title: jangp Blog
+title: Juan Carlos G. Pelaez Blog
 header-img: img/home-bg.jpg
 email: juancarlosgpelaez@gmail.com
 description: "Write your site description here. It will be used as your sites meta description as well!"
 baseurl: ""
-url: "http://http://jgpelaez.github.io/"
+url: "http://jgpelaez.github.io/"
 twitter_username: jcgpelaez
 github_username:  jgpelaez
 linkedin_username:  juancarlosgpelaez
@@ -35,13 +35,13 @@ defaults:
       path: _posts/es/pages
     values:
       type: pages
-      desc: "Site personnel traitant essentiellement de programmation en Python, Ruby, TeX, R..."
+      desc: "Sitio personal sobre programaciónm, Java, SOA, WSO2, DevOps..."
   -
     scope:
       path: _posts/en/pages
     values:
       type: pages
-      desc: "Personnal website mostly about programming in Python, Ruby, TeX, R..."
+      desc: "Personnal website mostly about programming, Java, SOA, WSO, DevOps..."
 
   -
     scope:
