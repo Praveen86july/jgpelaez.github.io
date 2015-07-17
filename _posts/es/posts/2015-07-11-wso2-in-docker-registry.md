@@ -9,7 +9,7 @@ comments: true
 
 ## Introducción
 
-Una vez que conocemos como [generar una imagen de Docker] (https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/), si queremos compartir esta imagen con el equipo, o bien utilizarla para diferentes entornos, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo Dockerfile para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. 
+Una vez que conocemos como [generar una imagen de Docker] (https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/), si queremos compartir esta imagen con el equipo, o bien utilizarla para diferentes entornos, existe la posibilidad de exportarla a un archivo tar, o se puede usar el archivo [Dockerfile] (https://docs.docker.com/reference/builder/) para construir de nuevo la imagen en cada uno de los docker host donde va a ser utilizada. 
 Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
 
 Una de las grandes ventajas que nos permitirá el registro es el de poder testear las diferentes versiones de un producto con la sola modificación de la imagen a descargar si estas están en el registro.
@@ -18,7 +18,7 @@ Podemos instalar un registro privado o bien utilizar el [registro público dispo
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/search-docker-registry.png)
 
-Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el Dockerfile, si han sido subidas directamente por un usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
+Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el [Dockerfile] (https://docs.docker.com/reference/builder/), si han sido subidas directamente por un usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
 
 Para el uso en producción de Docker es recomendable crear nuestras propias imágenes ya que las imágenes del registro pueden ser eliminadas por el usuario que las ha subido. También se recomienda usar las imágenes marcadas como oficiales, estas han sido elaboradas bien por el vendedor, por el equipo de Docker, o por usuarios con mucha popularidad.
 
@@ -30,7 +30,7 @@ En este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
 
 Primero crearemos un repositorio público en github o bitbucket, o bien haremos un [fork de uno existente] (https://github.com/jgpelaez/docker-wso2-esb.git).
 
-A este repositorio añadiremos el fichero/s Dockerfile:
+A este repositorio añadiremos el fichero/s [Dockerfile] (https://docs.docker.com/reference/builder/):
 
 ```docker
 FROM java:openjdk-7
@@ -63,7 +63,7 @@ Crearemos un usuario en el [registro de docker] (https://registry.hub.docker.com
 
 Podemos utilizar nuestro usuario de GitHub para realizar el registro.
 
-Una vez creada la cuenta podremos crear un nuevo repositorio, con construcción automática, el registro leerá nuestro Dockerfile y automáticamente realizará la construcción:
+Una vez creada la cuenta podremos crear un nuevo repositorio, con construcción automática, el registro leerá nuestro [Dockerfile] (https://docs.docker.com/reference/builder/) y automáticamente realizará la construcción:
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repositories.png)
 
@@ -71,11 +71,11 @@ Elegimos nuestra cuenta de bitbucket o de github:
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source.png)
 
-Y seleccionamos el repositorio en el que se encuentra el/los Dockerfile/s:
+Y seleccionamos el repositorio en el que se encuentra el/los [Dockerfile] (https://docs.docker.com/reference/builder/)/s:
 
 ![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source-repository.png)
 
-Podremos selecionar el directorio en el que se encuentra el Dockerfile. En nuestro caso añadiremos varios Dockerfile para diferentes versiones del ESB de WSO2. 
+Podremos selecionar el directorio en el que se encuentra el [Dockerfile] (https://docs.docker.com/reference/builder/). En nuestro caso añadiremos varios [Dockerfile] (https://docs.docker.com/reference/builder/) para diferentes versiones del ESB de WSO2. 
 También podremos cambiar el nombre del repositorio, la convención que utilizamos es para el repositorio en git docker-[vendedor]-[software] y para el registro de docker [vendedor]-[software].
 
 ![Creación del repositorio](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repository-creation.png)
