@@ -16,13 +16,13 @@ Una de las grandes ventajas que nos permitirá el registro es el de poder testea
 
 Podemos instalar un registro privado o bien utilizar el [registro público disponible en Docker](https://registry.hub.docker.com/). Este registro puede ser utilizado por cualquier usuario, y podemos realizar búsquedas para comprobar si otro usuario ha añadido la imagen que deseamos.
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/search-docker-registry.png)
+![registro en docker](/media/wso2-in-docker-registry/search-docker-registry.png)
 
 Si vamos a utilizar una imagen subida al registro por otro usuario es recomendable utilizar las marcadas con "construcción automática". En estas imágenes podemos comprobar como han sido creadas con el [Dockerfile] (https://docs.docker.com/reference/builder/), si han sido subidas directamente por un usuario no debemos confiar en ella si no es un usuario de confianza, ya que es una imagen que puede contener código malicioso.
 
 Para el uso en producción de Docker es recomendable crear nuestras propias imágenes ya que las imágenes del registro pueden ser eliminadas por el usuario que las ha subido. También se recomienda usar las imágenes marcadas como oficiales, estas han sido elaboradas bien por el vendedor, por el equipo de Docker, o por usuarios con mucha popularidad.
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-official-repo.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-official-repo.png)
 
 En este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
 
@@ -58,31 +58,31 @@ CMD ["/opt/wso2esb-4.8.1/bin/wso2server.sh"]
 
 Crearemos un usuario en el [registro de docker] (https://registry.hub.docker.com/)
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-signup.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-registry-signup.png)
 
 
 Podemos utilizar nuestro usuario de GitHub para realizar el registro.
 
 Una vez creada la cuenta podremos crear un nuevo repositorio, con construcción automática, el registro leerá nuestro [Dockerfile] (https://docs.docker.com/reference/builder/) y automáticamente realizará la construcción:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repositories.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-registry-repositories.png)
 
 Elegimos nuestra cuenta de bitbucket o de github:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-registry-git-source.png)
 
 Y seleccionamos el repositorio en el que se encuentra el/los [Dockerfile] (https://docs.docker.com/reference/builder/)/s:
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-git-source-repository.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-registry-git-source-repository.png)
 
 Podremos selecionar el directorio en el que se encuentra el [Dockerfile] (https://docs.docker.com/reference/builder/). En nuestro caso añadiremos varios [Dockerfile] (https://docs.docker.com/reference/builder/) para diferentes versiones del ESB de WSO2. 
 También podremos cambiar el nombre del repositorio, la convención que utilizamos es para el repositorio en git docker-[vendedor]-[software] y para el registro de docker [vendedor]-[software].
 
-![Creación del repositorio](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repository-creation.png)
+![Creación del repositorio](/media/wso2-in-docker-registry/docker-registry-repository-creation.png)
 
 La construcción se puede ejecutar manualmente, aunque normalmente no será necesario, ya que cuando modificamos un fichero en nuestro repositoria de git, se ejecuta automáticamente la construcción.
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-registry-repository-build-details.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-registry-repository-build-details.png)
 
 ## Utilizando el registro público de Docker
 
@@ -100,7 +100,7 @@ En este caso podremos ver la consola de administración con la url en el navegad
 https://localhost:19443/carbon/admin/login.jsp
 ```
 
-![registro en docker](/media/2015-07-11-wso2-in-docker-registry/docker-wso2-esb-admin.png)
+![registro en docker](/media/wso2-in-docker-registry/docker-wso2-esb-admin.png)
 
 El host a indicar en la url dependerá del sistema en el que ejecutemos docker. Si tiene de forma nativa docker (ubuntu, redhat, etc), será localhost, si utilizamos boot2docker (windows/mac), será la ip de la máquina virtual creada por [boot2docker] (http://boot2docker.io/) (por defecto suele ser 192.168.59.103).
 
