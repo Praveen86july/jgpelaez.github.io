@@ -1,6 +1,9 @@
+{% if page.lang == 'es' %}Publicado por {% else %} Posted by {% endif %}
+{% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} 
+{% if page.lang == 'es' %} el {% else %} on {% endif %} 
 {% if include.mode != 'month' %}
   {% assign d = include.date | date: "%-d" %}
-  {% if page.lang == 'fr' %}
+  {% if page.lang == 'es' %}
     {{ d }}{% if d == "1" %}<sup>er</sup>{% endif %} 
   {% else %}
     {{ d }}<sup>{% case d %}
@@ -12,21 +15,21 @@
   {% endif %}
 {% endif %}
 
-{% if page.lang == 'fr' %}
+{% if page.lang == 'es' %}
  {% assign m = include.date | date: "%-m" %}
  {% case m %}
-    {% when '1' %}janvier
-    {% when '2' %}février
-    {% when '3' %}mars
-    {% when '4' %}avril
-    {% when '5' %}mai
-    {% when '6' %}juin
-    {% when '7' %}juillet
-    {% when '8' %}août
-    {% when '9' %}septembre
-    {% when '10' %}octobre
-    {% when '11' %}novembre
-    {% when '12' %}décembre
+    {% when '1' %}enero
+    {% when '2' %}febrero
+    {% when '3' %}marzo
+    {% when '4' %}abril
+    {% when '5' %}mayo
+    {% when '6' %}junio
+    {% when '7' %}julio
+    {% when '8' %}agosto
+    {% when '9' %}septiembre
+    {% when '10' %}octubre
+    {% when '11' %}noviembre
+    {% when '12' %}diciembre
   {% endcase %} 
 {% else %}
   {{ include.date | date: "%B"}}
