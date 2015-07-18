@@ -8,7 +8,7 @@
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 	
 		<!-- linkedin -->
-		<script src="//platform.linkedin.com/in.js" type="text/javascript"> lang: en_US</script>
+		<script src="https://platform.linkedin.com/in.js" type="text/javascript"> lang: {% if page.lang == 'es' %}es_ES{% else %} en_US {% endif %}</script>
 		<script type="IN/Share" data-url="{{site.url}}{{page.url}}" data-counter="top"></script>
 	    <!-- Google + -->
         <div class="g-plus" data-action="share" data-annotation="bubble"></div>
