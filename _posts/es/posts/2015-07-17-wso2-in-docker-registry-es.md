@@ -127,8 +127,14 @@ El uso de contenedores linux (en este caso Docker) y de un registro de imágenes
 El registro de Docker o un registro privado nos podrá ayudar para que en el desarrollo todos los miembros del equipo trabajen con la misma configuración.
 Desde una perspectiva DevOps, si utilizamos imágenes de Docker para desarrollo, test y producción con un registro, estaremos testeando en un entorno muy similar en todas las fases del proyecto/producto, y minizaremos los errores de configuración que puedan llegar a producción.
 
-
 ## Recursos
 
 - Código fuente en [github/jgpelaez] (https://github.com/jgpelaez/docker-wso2-esb.git).
 -  Imágen del wso2 esb en [repositorio docker] (https://registry.hub.docker.com/u/jgpelaez/wso2-esb/) 
+
+## Gracias / Contribuciones
+
+- Puedes contribuir al registro docker: https://github.com/jgpelaez/docker-wso2-esb creando "pull requests"
+- Si parece útil el código puedes márcarlo como favórito en:
+  [GitHub] (https://github.com/jgpelaez/docker-wso2-esb/stargazers)
+  [Docker Registry] (https://registry.hub.docker.com/u/jgpelaez/wso2-esb/)
