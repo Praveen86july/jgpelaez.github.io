@@ -1,0 +1,18 @@
+{
+	"title": "RSF git repositories",
+	"info": "If you want to collaborate with the project (fork/pull request...), please send an email to the RSF team",
+	"mail": "mailto:DIGIT-REFAPP-SUPPORT@ec.europa.eu?subject=Stash permission for a project",
+	"projects": [{
+		"projectId": "eac-eforms-poc",		
+		"stashUrl": "https://webgate.ec.europa.eu/CITnet/stash/scm/refappsdbx/eac-eforms-poc.git",
+		"gitUrl": null,
+		"zipUrl": null
+	},
+	{
+		"projectId": "wfadm",
+		"ccdigitUrl": "https://webgate.ec.europa.eu/CITnet/confluence/display/CCDIGIT/Project+WFADM",
+		"stashUrl": "https://webgate.ec.europa.eu/CITnet/stash/scm/wfadm/wfadm.git",
+		"gitUrl": "https://webgate.ec.europa.eu/CITnet/git/WFADM",
+		"zipUrl": null
+	}]
+}

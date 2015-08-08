@@ -9,18 +9,20 @@ comments: true
 
 ## Introduction
 
-Once we know [how to create a Dcoker image] (https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/), if we want to share this image with the team, or use it in different environments, it is possible to export to a tar file, or you can use the file [Dockerfile] (https://docs.docker.com/reference/builder/) to build back the image on each of the docker host where it will be used.
+Once we know [how to create a Docker image] (https://itscenario.wordpress.com/2014/11/09/dockerizing-wso2-esb/), if we want to share this image with the team, or use it in different environments, it´s possible to export to a tar file, or you can use the [Dockerfile] (https://docs.docker.com/reference/builder/) to build the image on each of the docker hosts where it will be used.
 Having to rebuild the image on the pc of each of the components of your team is not practical. Would not it be better if we could download images ready to use? To resolve this problem Docker has a solution called registry, which can raise and download our images.
 
-One of the great advantages that allow us to check is to be able to test different versions of a product with the sole modification of the image to download if they are on record.
+One of the great advantages is to be able to test different versions of a product only changing the version of the image to download.
 
-We can install a private record or use the [public record available in Docker] (https://registry.hub.docker.com/). This log can be used by any user, and can be searched to see if another user has added the image we want.
+We can install a private registry or use the [public registry available in Docker] (https://registry.hub.docker.com/). This registry can be used by any user, and has a search function to see if another user has added the image we want.
 
 ! [Registration docker] (/ media / wso2-in-docker-registry / search-docker-registry.png)
 
-If you will use a file uploaded by another user registration is recommended to use the marked "automatic building". In these images we can see how they have been created with the [Dockerfile] (https://docs.docker.com/reference/builder/) if they have been uploaded directly by a user should not rely on it if it is not a user confidence, because it is an image that can contain malicious code.
+If you use an image uploaded by another user registration is recommended to use the ones marked as "automatic building". In these images we can see how it has been created with the [Dockerfile] (https://docs.docker.com/reference/builder/) if the image has been uploaded directly by a user whe should'nt trust its, because it is an image that can contain malicious software.
 
-For use in production of Docker's write our own pictures as the images of the record can be deleted by the user who uploaded. We also recommend using images marked as official, these have been developed either by the seller, by the team of Docker, or by users with much popularity.
+TODO
+
+For use in production of Docker's write our own pictures as the images of the registry can be deleted by the user who uploaded. We also recommend using images marked as official, these have been developed either by the seller, by the team of Docker, or by users with much popularity.
 
 ! [Registration docker] (/ media / wso2-in-docker-registry / docker-official-repo.png)
 

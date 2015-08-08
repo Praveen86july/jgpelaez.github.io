@@ -24,7 +24,7 @@ Para el uso en producción de Docker es recomendable crear nuestras propias imá
 
 ![registro en docker](/media/wso2-in-docker-registry/docker-official-repo.png)
 
-En este post vamos a explicar como subir nuestrar imágenes de WSO2 al registro.
+En este post vamos a explicar como subir nuestras imágenes de WSO2 al registro.
 
 ## Creación de imágenes en el registro público de Docker
 
