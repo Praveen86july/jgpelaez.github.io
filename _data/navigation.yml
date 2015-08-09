@@ -1,11 +1,17 @@
 en:
+  home:
+    title: "Home"
+    url:   "/"
   logo:
     title: "Blog"
-    url:   "/"
+    url:   "/blog/"
   about:
     title: "about"
     url:   "/about/"
 es:
+  home:
+    title: "Inicio"
+    url:   "/inicio/"
   logo:
     title: "Blog"
     url:   "/journal/"
