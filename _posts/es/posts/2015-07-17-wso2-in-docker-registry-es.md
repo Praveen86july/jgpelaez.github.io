@@ -13,7 +13,7 @@ Una vez que conocemos como [generar una imagen de Docker] (https://itscenario.wo
 Tener que reconstruir la imagen en el pc de cada uno de los componentes de tu equipo no es algo práctico. ¿No sería mejor si pudiéramos descargar imágenes ya listas para usar? Para resolver este problema disponemos de un elemento que docker denomina registro, donde podemos subir y bajar nuestras imágenes.
 
 Una de las grandes ventajas que nos permitirá el registro es el de poder testear las diferentes versiones de un producto con la sola modificación de la imagen a descargar si estas están en el registro.
-
+	
 Podemos instalar un registro privado o bien utilizar el [registro público disponible en Docker](https://registry.hub.docker.com/). Este registro puede ser utilizado por cualquier usuario, y podemos realizar búsquedas para comprobar si otro usuario ha añadido la imagen que deseamos.
 
 ![registro en docker](/media/wso2-in-docker-registry/search-docker-registry.png)
