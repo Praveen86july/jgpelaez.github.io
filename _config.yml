@@ -1,5 +1,5 @@
 # Site settings
-title: Jang and the cloud
+title: Juan Carlos G. Peláez
 header-img: img/home-bg.jpg
 email: juancarlosgpelaez@gmail.com
 description: "Site about devops, cloud computing and software in general"
@@ -10,6 +10,7 @@ github_username:  jgpelaez
 linkedin_username:  juancarlosgpelaez
 disqus_shortname: jgpelaezgithubio
 header-img: "media/background/oosstende-clouds3.jpg"
+exclude: ["node_modules","serve-jekyll*","npm*","Gemfile"]
 
 permalink: /:title/
 
@@ -37,13 +38,13 @@ defaults:
       path: _posts/es/pages
     values:
       type: pages
-      desc: "Sitio personal sobre programaciónm, Java, SOA, WSO2, DevOps..."
+      desc: "Sitio personal sobre la nube, programación, Java, SOA, WSO2, DevOps..."
   -
     scope:
       path: _posts/en/pages
     values:
       type: pages
-      desc: "Personnal website mostly about programming, Java, SOA, WSO, DevOps..."
+      desc: "Personnal website mostly about the cloud, programming, Java, SOA, WSO, DevOps..."
 
   -
     scope:

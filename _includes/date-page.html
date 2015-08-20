@@ -1,5 +1,5 @@
 {% if page.lang == 'es' %}Publicado por {% else %} Posted by {% endif %}
-{% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} 
+{% if post.author %}{{ post.author }}{% else %}{{ site.title }}{% endif %} 
 {% if page.lang == 'es' %} el {% else %} on {% endif %} 
 {% if include.mode != 'month' %}
   {% assign d = include.date | date: "%-d" %}
