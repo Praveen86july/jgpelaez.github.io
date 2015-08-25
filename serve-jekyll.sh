@@ -1,2 +1,2 @@
 rm -rf _site
-jekyll serve --watch
+jekyll serve --watch --drafts
