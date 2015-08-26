@@ -215,49 +215,196 @@ provisioner "remote-exec" {
   }
 }
 ```
-The shell scripts for provision the machine 
-
-
-[Stateless Pattern] (http://www.cloudcomputingpatterns.org/Stateless_Component):
+The shell scripts for provision the machine are simple scripts, creating an axis service and using the WSO2 ESB as a proxy.
+The idea of this machine is to create an stateless machine, the ESB will proxy all the conections and do a logging (in the sample only in the log file, but can be in a remote statefull service). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dinamically services depending on the traffic. And the provision and scalate will be really simple.
 
 ![Stateless Pattern] (http://www.cloudcomputingpatterns.org/images/2/29/Stateless_component_sketch.png)
 
+The shell script are:
 
+- **install-docker.sh**: 
+```sh
+#!/bin/sh
+curl -sSL https://get.docker.com/ | sh
+sudo usermod -aG docker ubuntu
+echo added user to docker group
+```
+
+This script executes the installation of docker and adds the user in the docker group.
+
+- **run-axis-server.sh**: 
+
+```sh
+#!/bin/sh
+. /tmp/set-env.sh
+
+sudo docker rm -f $AXIS_SERVER_NAME
+sudo docker rm -f wso2-esb-samples-as
+
+#Creates a container 
+sudo docker run -d --name wso2-esb-samples-as -v $WSO2_ESB_PATH \
+ jgpelaez/wso2-esb /bin/bash
+
+mkdir -p target
+
+axis_server_pid=$(sudo docker run \
+  -d  \
+  --volumes-from wso2-esb-samples-as \
+  --name $AXIS_SERVER_NAME \
+  webratio/ant sh $WSO2_ESB_SAMPLES_PATH/axis2Server/axis2server.sh -name $AXIS_SERVER_NAME)
+  
+echo "container id". $axis_server_pid
+sudo docker exec -d $axis_server_pid ant -f $WSO2_ESB_SAMPLES_PATH/axis2Server/src/SimpleStockQuoteService/build.xml
+```
+
+This script executes a docker container with an ant execution with an axis server. The execution code is in a volume with the WSO2 ESB samples.
+
+
+- **run-axis-server.sh**: 
+
+```sh
+#!/bin/sh
+. /tmp/set-env.sh
+
+sudo docker rm -f wso2-esb-samples
+
+sudo docker build -t jgpelaez/wso2-esb-samples ../utils/esb/
+
+sudo docker run  \
+	-d  \
+	-p 443:9443 -p 80:8280 \
+	-v $WSO2_ESB_PATH \
+	--link wso2-esb-samples-axis-server:wso2-esb-samples-axis-server \
+	--name wso2-esb-samples \
+	jgpelaez/wso2-esb $WSO2_ESB_PATH/bin/wso2esb-samples.sh -sn 0
+```
+
+Runs a docker container with a WSO2 ESB configured with the sample number 0. The https port will be exposed outside, and the execution port 8280 with the 80 port. 
+The --link will create a link with the axis server, and the axis server port doesn't needs to expose the ports outside docker.
 
 ## Terraform execution
 
-
-EC2 dashboard, Network & security
+Before the execution, as it's necesary ssh access to the EC2 instance we need to create a key pair in the AWS console, going to EC2 dashboard, Network & security:
 ![Create key pair](/media/posts/terraform-aws-wso2-esb-docker-sample/aws-create-key-pair.png)
 
-Use the docker image
+Will create a ".pem" file, this file will allow to access terraform throught ssh.
 
-docker run --rm -v $(pwd):/data --net=host jgpelaez/terraform plan 
+### Execution plan:
 
-docker run --rm -v $(pwd):/data --net=host jgpelaez/terraform apply
+The terraform plan command is used to create an execution plan. Our first execution will be:
 
-not necesary to install terraform in the computer, can use the docker image.
+```sh
+docker run \
+	--rm \
+	-v $(pwd):/data \
+	-v /home/jgpelaez/git/ec2-instance/data/:/data-ssl \
+    uzyexe/terraform plan \
+    -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
+```
 
-Destroy:
+With -v it´s sharing the host folders with the containers, the /data for the .tf files and the /data-ssl the key ar previously created.
+The execution will create an initial plan file called **terraform.tfstate**
 
-docker run --rm -v $(pwd):/data --net=host jgpelaez/terraform plan -destroy
+After the creation of the plan, can be applied and create the real infrastructure with the instruction apply:
 
-docker run --rm -v $(pwd):/data --net=host jgpelaez/terraform destroy -force 
+```sh
+docker run \
+	--rm \
+	-v $(pwd):/data \
+	-v /home/jgpelaez/git/ec2-instance/data/:/data-ssl \
+    uzyexe/terraform apply \
+    -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
+```
+
+Will create the infrasctucture in the AWS, and print the ouput variables:
 
 ![terraform-apply-finised.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/terraform-apply-finised.png)
 
+In the ASW console will appear all the structure defined in the **.tf** files, a new running instance, one volume, a new Load Balancer and a new group:
+
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instances.png)
+
+Checking the instance detail can obtain the public DNS, the WSO2 ESB management console is not exposed throught the load balancer, and normally it should be restricted to be acceded with an ip in a security group.
 
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instance-detail.png)
 
+We can see in detail the security group:
+
 ![aws-security-groups.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-security-groups.png)
+
+We can see in detail the Elastic Load Balancer:
 
 ![aws-elb.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-elb.png)
 
+And with the public DNS for the ec2 instance we can check if the WSO2 ESB admin console is running (user and password are the default admin/admin)
+
 ![logs] (/media/posts/terraform-aws-wso2-esb-docker-sample/wso2-esb-console.png)
 
+### Execute a client for the service:
+
+As we are using the samples from WSO2, it's possible to use the sample client. It can be executed in our local system, and will demonstrate if all the infrastrucure is correctly working.
+
+In local can be also executed with docker, using the script **/wso2-esb/run-client.sh**:
+
+```sh
+#!/bin/sh
+. ./set-env.sh
+
+WSO_ESB_SAMPLES_SERVER_NAME=$1
+
+export CLIENT_ARGUMENTS="-Daddurl=http://$AXIS_SERVER_NAME:9000/services/SimpleStockQuoteService \
+   -Dtrpurl=http://$WSO_ESB_SAMPLES_SERVER_NAME/"
+   	
+echo Running wso2 client sample with arguments: $CLIENT_ARGUMENTS
+
+docker rm -f wso2-esb-samples-client
+#Creates a container 
+docker run -d --name wso2-esb-samples-client -v $WSO2_ESB_PATH \
+ jgpelaez/wso2-esb /bin/bash
+
+docker run \
+  --volumes-from wso2-esb-samples-client \
+  webratio/ant ant stockquote -f $WSO2_ESB_SAMPLES_ClIENT_BUILD \
+   $CLIENT_ARGUMENTS
+```
+
+The address will be the public DNS of the Elastic Load Balancer:
+
+```sh
+sh run-client.sh terraform-example-elb-1103743156.eu-west-1.elb.amazonaws.com
+```
+
+And it will show the result of the exection in the server:
 
 ![logs] (/media/posts/terraform-aws-wso2-esb-docker-sample/wso2-esb-logs.png)
+
+ 
+### Remove resources:
+
+Finally we can destroy the resources created in AWS, first we can ask to the plan what is going to be destroyed:
+
+```sh
+docker run \
+	--rm \
+	-v $(pwd):/data \
+	-v /home/jgpelaez/git/ec2-instance/data/:/data-ssl \
+    uzyexe/terraform plan -destroy \
+    -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
+```
+
+And destroy it with the destroy instruction, using docker it's necesary to add the -force flag.
+
+```sh
+docker run \
+	--rm \
+	-v $(pwd):/data \
+	-v /home/jgpelaez/git/ec2-instance/data/:/data-ssl \
+    uzyexe/terraform destroy \
+    -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem' \
+    -force
+```
+
+# Conclusion
 
 ## Resources
 
