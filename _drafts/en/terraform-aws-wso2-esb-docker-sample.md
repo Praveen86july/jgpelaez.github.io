@@ -9,17 +9,19 @@ header-img: "media/background/plane-clouds.jpg"
 tags: [terraform, aws, docker, wso2 esb, esb]
 ---
 
-One of the good practices for a datacenter or a cloud infrastructure is to have the [infrastructure as code]
+One of the good practices for a datacenter or a cloud infrastructure is to manage the [infrastructure as code]
 (http://www.thoughtworks.com/es/insights/blog/infrastructure-code-reason-smile).
-There are many different options in the market as CloudFormation, Heat, etc to create and provision the insfrastucture and code. 
+There are many different options in the market as **[CloudFormation](https://aws.amazon.com/cloudformation/)**, **[Heat](https://wiki.openstack.org/wiki/Heat)**, **[terraform](https://terraform.io/)**, etc to create and provision the insfrastucture and code. 
 On internet we can find different comparisons for the tools:
 
 - [thoughtworks.com](http://www.thoughtworks.com/es/insights/blog/choosing-right-tool-provision-aws-infrastructure)
 - [ypoonawala.wordpress.com](https://ypoonawala.wordpress.com/2014/12/14/terraform-vs-cloudformation-a-comparison-of-infra-management-tools/)
 - [www.terraform.io](https://www.terraform.io/intro/vs/index.html)
  
+**[CloudFormation](https://aws.amazon.com/cloudformation/)** and **[Heat](https://wiki.openstack.org/wiki/Heat)** are specific for AWS and OpenStack, and **[terraform](https://terraform.io/)** can be used for multiple cloud providers.
 In this article it's going to be explained how to create a simple infrastructure in [AWS](https://aws.amazon.com/).
-The sample application will have an [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), an EC2 instance with a WSO2 ESB, and a axis server with a sample service. This sample is based in the [BASIC TWO-TIER AWS ARCHITECTURE](https://www.terraform.io/intro/examples/aws.html) from terraform samples.
+
+The sample application will have an [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), an EC2 instance with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/), and a axis server with a sample service. This sample is based in the [BASIC TWO-TIER AWS ARCHITECTURE](https://www.terraform.io/intro/examples/aws.html) from terraform samples.
 
 # AWS account
 
@@ -35,7 +37,7 @@ This secret key and password will allow to access AWS with the APIs.
 
 # Use of terraform
 
-Terraform can be installed [following the instructions](https://www.terraform.io/intro/getting-started/install.html), but in this case we can avoid it using a docker image doing a search in the **[Docker Hub](https://hub.docker.com/)**. Using the docker image it's not needed to install additional software in your computer, and it also allows to use terraform in unsupported operating systems. In a team everybody will use the same version of terraform if we specify it in the execution scripts.
+Terraform can be installed [following the instructions](https://www.terraform.io/intro/getting-started/install.html), but we can avoid it using a docker image doing a search in the **[Docker Hub](https://hub.docker.com/)**. Using a [docker image](https://hub.docker.com/r/uzyexe/terraform/) it's not needed to install additional software in your computer, and it also allows to use terraform in unsupported operating systems. In a team everybody will use the same version of terraform if we specify it in the execution scripts.
 
 To obtain the docker image, we can pull it, in this case:
 
@@ -45,7 +47,7 @@ docker pull uzyexe/terraform
 
 ## Terraform project
 
-In this moment we can create the terraform files (all the tf files will be executed in parallel if there is no dependency between instructions):
+In this moment we can create the terraform files, using the [terraform dsl or with JSON format](https://www.terraform.io/docs/configuration/syntax.html) (all the **.tf** files will be executed in parallel if there is no dependency between instructions):
 
 ### **outputs.tf**: 
 
@@ -63,7 +65,7 @@ output "ec_address" {
 ```
 
 ### **variables.tf**: 
-Definition for some input variables, the keys, and passwords will be parametrized
+Definition for some input variables as the region, instance type and region, the keys, and passwords will be parametrized.
 
 ```json
 variable "key_name" {
@@ -92,7 +94,7 @@ variable "aws_amis" {
 ```
 
 ### **terraform.tfvars**: 
-Replacement for the variables, in this file we put the user data information, for example the user key and password. This file is ignored in the public git repository. We can store this files in private repositories (in bitbucket we can have **[unlimited private repositories for free] (https://bitbucket.org/plans)**)
+Replacement for the variables, in this file we put the user data information, for example the user key and password. This file should be added as ignored in the public git repository. We can store this files in private repositories (in bitbucket we can have **[unlimited private repositories for free] (https://bitbucket.org/plans)**)
 
 ### **main.tf**: 
 
@@ -215,7 +217,7 @@ provisioner "remote-exec" {
   }
 }
 ```
-The shell scripts for provision the machine are simple scripts, creating an axis service and using the WSO2 ESB as a proxy.
+The shell scripts for provision the machine are simple scripts, creating an axis service and using the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) as a proxy.
 The idea of this machine is to create an stateless machine, the ESB will proxy all the conections and do a logging (in the sample only in the log file, but can be in a remote statefull service). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dinamically services depending on the traffic. And the provision and scalate will be really simple.
 
 ![Stateless Pattern] (http://www.cloudcomputingpatterns.org/images/2/29/Stateless_component_sketch.png)
@@ -257,7 +259,7 @@ echo "container id". $axis_server_pid
 sudo docker exec -d $axis_server_pid ant -f $WSO2_ESB_SAMPLES_PATH/axis2Server/src/SimpleStockQuoteService/build.xml
 ```
 
-This script executes a docker container with an ant execution with an axis server. The execution code is in a volume with the WSO2 ESB samples.
+This script executes a docker container with an ant execution with an axis server. The execution code is in a volume with the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) samples.
 
 
 - **run-axis-server.sh**: 
@@ -279,7 +281,7 @@ sudo docker run  \
 	jgpelaez/wso2-esb $WSO2_ESB_PATH/bin/wso2esb-samples.sh -sn 0
 ```
 
-Runs a docker container with a WSO2 ESB configured with the sample number 0. The https port will be exposed outside, and the execution port 8280 with the 80 port. 
+Runs a docker container with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) configured with the sample number 0. The https port will be exposed outside, and the execution port 8280 with the 80 port. 
 The --link will create a link with the axis server, and the axis server port doesn't needs to expose the ports outside docker.
 
 ## Terraform execution
@@ -324,7 +326,7 @@ In the ASW console will appear all the structure defined in the **.tf** files, a
 
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instances.png)
 
-Checking the instance detail can obtain the public DNS, the WSO2 ESB management console is not exposed throught the load balancer, and normally it should be restricted to be acceded with an ip in a security group.
+Checking the instance detail can obtain the public DNS, the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) management console is not exposed throught the load balancer, and normally it should be restricted to be acceded with an ip in a security group.
 
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instance-detail.png)
 
@@ -336,7 +338,7 @@ We can see in detail the Elastic Load Balancer:
 
 ![aws-elb.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-elb.png)
 
-And with the public DNS for the ec2 instance we can check if the WSO2 ESB admin console is running (user and password are the default admin/admin)
+And with the public DNS for the ec2 instance we can check if the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) admin console is running (user and password are the default admin/admin)
 
 ![logs] (/media/posts/terraform-aws-wso2-esb-docker-sample/wso2-esb-console.png)
 
@@ -405,6 +407,12 @@ docker run \
 ```
 
 # Conclusion
+
+This is a very simple example of the use of terraform and docker as infrastructure as code, in a real project it will be more complex and use other layers as database, etc. But we can have an ide how to start an infrastucture as code. 
+
+Terraform will also allow to do modification using the concept of state. The infrascture as code will simplify our future changes, and gives and easy way to see our infrasctucture, and know wich resources we are using.
+
+With the stateless services concepts using Docker will be more simple to scalate our system simply adding new services in a very simple way.k
 
 ## Resources
 
