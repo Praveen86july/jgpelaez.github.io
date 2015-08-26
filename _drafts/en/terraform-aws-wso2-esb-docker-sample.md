@@ -218,13 +218,14 @@ provisioner "remote-exec" {
 }
 ```
 The shell scripts for provision the machine are simple scripts, creating an axis service and using the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) as a proxy.
-The idea of this machine is to create an stateless machine, the ESB will proxy all the conections and do a logging (in the sample only in the log file, but can be in a remote statefull service). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dinamically services depending on the traffic. And the provision and scalate will be really simple.
+The idea of this machine is to create an stateless machine, the ESB will proxy all the conections and do a logging (in the sample only in the log file, but can be in a remote statefull service). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dinamically services depending on the traffic. To provision new services and scalate will be really simple.
 
 ![Stateless Pattern] (http://www.cloudcomputingpatterns.org/images/2/29/Stateless_component_sketch.png)
 
-The shell script are:
+The shell script files are:
 
 - **install-docker.sh**: 
+
 ```sh
 #!/bin/sh
 curl -sSL https://get.docker.com/ | sh
@@ -281,12 +282,12 @@ sudo docker run  \
 	jgpelaez/wso2-esb $WSO2_ESB_PATH/bin/wso2esb-samples.sh -sn 0
 ```
 
-Runs a docker container with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) configured with the sample number 0. The https port will be exposed outside, and the execution port 8280 with the 80 port. 
+Runs a docker container with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) configured with the sample number 0. The https 9443 port will be exposed outside throught the standar 443, and the execution port 8280 with the 80 port. 
 The --link will create a link with the axis server, and the axis server port doesn't needs to expose the ports outside docker.
 
 ## Terraform execution
 
-Before the execution, as it's necesary ssh access to the EC2 instance we need to create a key pair in the AWS console, going to EC2 dashboard, Network & security:
+Before the execution, as it's necesary ssh access to the EC2 instance we need to **create a key pai**r in the AWS console, going to **EC2 dashboard**, **Network & security**:
 ![Create key pair](/media/posts/terraform-aws-wso2-esb-docker-sample/aws-create-key-pair.png)
 
 Will create a ".pem" file, this file will allow to access terraform throught ssh.
@@ -304,7 +305,7 @@ docker run \
     -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
 ```
 
-With -v it´s sharing the host folders with the containers, the /data for the .tf files and the /data-ssl the key ar previously created.
+With -v it´s sharing the host folders with the container, the /data for the .tf files and the /data-ssl the key ar previously created.
 The execution will create an initial plan file called **terraform.tfstate**
 
 After the creation of the plan, can be applied and create the real infrastructure with the instruction apply:
