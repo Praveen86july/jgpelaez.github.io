@@ -6,6 +6,7 @@ date:       2015-08-20 12:00:00
 author:     "Juan Carlos G. Peláez"
 comments: true
 header-img: "media/background/docker-algeciras.jpg"
+tags: [terraform, aws, docker, wso2 esb, esb]
 ---
 
 ## Introduction
