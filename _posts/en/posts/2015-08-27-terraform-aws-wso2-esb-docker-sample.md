@@ -21,7 +21,7 @@ On Internet we can find different comparisons for the tools:
 **[CloudFormation](https://aws.amazon.com/cloudformation/)** and **[Heat](https://wiki.openstack.org/wiki/Heat)** are specific for AWS and OpenStack, and **[Terraform](https://terraform.io/)** can be used for multiple cloud providers.
 In this article it's going to be explained how to create a simple infrastructure in [AWS](https://aws.amazon.com/) with **[Terraform](https://terraform.io/)** and [Docker](https://www.docker.com/).
 
-The sample application will have an [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), an EC2 instance with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/), and a axis server with a sample service. This sample is based in the [BASIC TWO-TIER AWS ARCHITECTURE](https://www.terraform.io/intro/examples/aws.html) from [Terraform](https://terraform.io/) samples and the WSO2 ESB samples.
+The sample application will have an [Elastic Load Balancer](https://aws.amazon.com/elasticloadbalancing/), an EC2 instance with a [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/), and an [axis server](http://axis.apache.org/axis2/java/core/) with a sample service. This sample is based in the [BASIC TWO-TIER AWS ARCHITECTURE](https://www.terraform.io/intro/examples/aws.html) from [Terraform](https://terraform.io/) samples and the WSO2 ESB samples.
 
 # AWS account
 
@@ -100,10 +100,10 @@ Replacement for the variables, in this file we put the user data information, fo
 
 Main file with our code for the creation.
 
-In this file it's created an AWS security group, [Elastic Load Balancer] (https://aws.amazon.com/elasticloadbalancing/) and an AWS instance.
+In this file it's created an AWS security group, [Elastic Load Balancer] (https://aws.amazon.com/elasticloadbalancing/) and an AWS EC2 instance.
 
 [Elastic Load Balance Pattern](http://www.cloudcomputingpatterns.org/Elastic_Load_Balancer):
-![Elastic Load Balance Pattern] (http://www.cloudcomputingpatterns.org/images/e/ef/Elastic_load_balancer_sketch.png)
+![Elastic Load Balance Pattern] (/media/posts/terraform-aws-wso2-esb-docker-sample/elastic-load-balancer-pattern.png)
  
 
 
@@ -220,7 +220,7 @@ provisioner "remote-exec" {
 The shell scripts for provision the machine are simple scripts, creating an axis service and using the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) as a proxy.
 The idea of is to create an stateless instance, the ESB will proxy all the connections and do a logging (in the sample only in the log file, but can be in a remote statefull service, like a database or a [S3 bucket](https://aws.amazon.com/s3/)). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dynamically instances depending on the traffic. To provision new services and escalate will be really simple.
 
-![Stateless Pattern] (http://www.cloudcomputingpatterns.org/images/2/29/Stateless_component_sketch.png)
+![Stateless Pattern] (/media/posts/terraform-aws-wso2-esb-docker-sample//Stateless_component_sketch.png)
 
 The shell script files are:
 
