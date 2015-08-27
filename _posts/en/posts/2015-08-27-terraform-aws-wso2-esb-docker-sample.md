@@ -9,7 +9,7 @@ header-img: "media/background/plane-clouds.jpg"
 tags: [terraform, aws, docker, wso2 esb, esb]
 ---
 
-One of the good practices for a data center or a cloud infrastructure is to manage the [infrastructure as code]
+One of the good practices in a data center or a cloud infrastructure is to manage the [infrastructure as code]
 (http://www.thoughtworks.com/es/insights/blog/infrastructure-code-reason-smile).
 There are many different options in the market as **[CloudFormation](https://aws.amazon.com/cloudformation/)**, **[Heat](https://wiki.openstack.org/wiki/Heat)**, **[terraform](https://terraform.io/)**, etc. to create and provision the infrastructure and code. 
 On Internet we can find different comparisons for the tools:
@@ -47,11 +47,11 @@ docker pull uzyexe/terraform
 
 ## Terraform project
 
-In this moment we can create the [Terraform](https://terraform.io/) files, using the [terraform dsl or with JSON format](https://www.terraform.io/docs/configuration/syntax.html) (all the **.tf** files will be executed in parallel if there is no dependency between instructions):
+Terraform uses text files to describe infrastructure and to set variables. These text files are called Terraform configurations and end in .tf. We can create the [Terraform](https://terraform.io/) files, using the [terraform dsl or in JSON format](https://www.terraform.io/docs/configuration/syntax.html) (all the **.tf** files will be executed in parallel if there is no dependency between instructions). In this sample the configuration files will be:
 
 ### **outputs.tf**: 
 
-Definition for the output to show in the screen
+Outputs define values that will be highlighted to the user when Terraform applies:
 
 ```json
 output "ebs_address" {
@@ -65,7 +65,7 @@ output "ec_address" {
 ```
 
 ### **variables.tf**: 
-Definition for some input variables as the region, instance type and region, the keys, and passwords will be parametrized.
+Definition for some input variables as the region, instance type and region, the keys, and passwords will be parameterized.
 
 ```json
 variable "key_name" {
@@ -108,7 +108,7 @@ In this file it's created an AWS security group, [Elastic Load Balancer] (https:
 
 
 With the [Elastic Load Balancer] (https://aws.amazon.com/elasticloadbalancing/) we would have in the future the possibility to dynamically add more services to our infrastructure. 
-The instance is provisioned with simple shell scripts installing [Docker](https://www.docker.com/) images. The machine can be also provisioned with a [custom Amazon Machine Image (AMI)](https://aws.amazon.com/marketplace/help/200940360) or with a provisioner like **[Packer](https://www.packer.io/)**, **[Ansible](http://www.ansible.com/home)**, **[Chef](https://www.chef.io/)**, **[Puppet](https://puppetlabs.com/)**... 
+The instance is provisioned with simple shell scripts installing [Docker](https://www.docker.com/) images. The instance can be also provisioned with a [custom Amazon Machine Image (AMI)](https://aws.amazon.com/marketplace/help/200940360) or with a provisioner like **[Packer](https://www.packer.io/)**, **[Ansible](http://www.ansible.com/home)**, **[Chef](https://www.chef.io/)**, **[Puppet](https://puppetlabs.com/)**... 
 
 ```json
 # Specify the provider and access details
@@ -218,7 +218,7 @@ provisioner "remote-exec" {
 }
 ```
 The shell scripts for provision the machine are simple scripts, creating an axis service and using the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) as a proxy.
-The idea of this machine is to create an stateless machine, the ESB will proxy all the connections and do a logging (in the sample only in the log file, but can be in a remote statefull service). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dynamically services depending on the traffic. To provision new services and escalate will be really simple.
+The idea of is to create an stateless instance, the ESB will proxy all the connections and do a logging (in the sample only in the log file, but can be in a remote statefull service, like a database or a [S3 bucket](https://aws.amazon.com/s3/)). Following the [stateless machine pattern]((http://www.cloudcomputingpatterns.org/Stateless_Component)) we can add an remove dynamically instances depending on the traffic. To provision new services and escalate will be really simple.
 
 ![Stateless Pattern] (http://www.cloudcomputingpatterns.org/images/2/29/Stateless_component_sketch.png)
 
@@ -260,7 +260,7 @@ echo "container id". $axis_server_pid
 sudo docker exec -d $axis_server_pid ant -f $WSO2_ESB_SAMPLES_PATH/axis2Server/src/SimpleStockQuoteService/build.xml
 ```
 
-This script executes a [Docker](https://www.docker.com/) container with an ant execution with an axis server. The execution code is in a volume with the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) samples.
+This script executes a [Docker](https://www.docker.com/) container with ant executing an axis server. The execution code is in a volume with the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) samples.
 
 
 - **run-axis-server.sh**: 
@@ -305,7 +305,7 @@ docker run \
     -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
 ```
 
-With -v it´s sharing the host folders with the container, the /data for the .tf files and the /data-ssl the key ar previously created.
+With -v it´s sharing the host folders with the container, the /data for the .tf files and the /data-ssl for the key ar previously created.
 The execution will create an initial plan file called **terraform.tfstate**
 
 After the creation of the plan, can be applied and create the real infrastructure with the instruction apply:
@@ -323,15 +323,15 @@ Will create the infrasctructure in the AWS, and print the ouput variables:
 
 ![terraform-apply-finised.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/terraform-apply-finised.png)
 
-In the ASW console will appear all the structure defined in the **.tf** files, a new running instance, one volume, a new Load Balancer and a new group:
+In the AWS console will appear all the structure defined in the **.tf** files, a new running instance, one volume, a new Load Balancer and a new group:
 
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instances.png)
 
-Checking the instance detail can obtain the public DNS, the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) management console is not exposed through the load balancer, and normally it should be restricted to be acceded with an ip in a security group.
+Checking the instance detail can obtain the public DNS, the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) management console is not exposed through the load balancer, and normally it should be restricted to be acceded from an specific ip in a security group.
 
 ![aws-instances.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-instance-detail.png)
 
-We can see in detail the security group:
+We can see in detail the security group created:
 
 ![aws-security-groups.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-security-groups.png)
 
@@ -339,13 +339,13 @@ We can see in detail the Elastic Load Balancer:
 
 ![aws-elb.png] (/media/posts/terraform-aws-wso2-esb-docker-sample/aws-elb.png)
 
-And with the public DNS for the ec2 instance we can check if the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) admin console is running (user and password are the default admin/admin)
+Using the public DNS for the ec2 instance we can check if the [WSO2 ESB](http://wso2.com/products/enterprise-service-bus/) admin console is running (user and password are the default admin/admin)
 
 ![logs] (/media/posts/terraform-aws-wso2-esb-docker-sample/wso2-esb-console.png)
 
 ### Execute a client for the service:
 
-As we are using the samples from WSO2, it's possible to use the sample client. It can be executed in our local system, and will demonstrate if all the infrastructure is correctly working.
+As we are using the **[samples](https://docs.wso2.com/display/ESB481/Samples)** from WSO2 ESB, it's possible to use the **[sample client](https://docs.wso2.com/display/ESB481/Using+the+Sample+Clients)**. It can be executed in our local system, and will demonstrate if all the infrastructure is correctly working.
 
 In local can be also executed with [Docker](https://www.docker.com/), using the script **/wso2-esb/run-client.sh**:
 
@@ -374,17 +374,17 @@ docker run \
 The address will be the public DNS of the Elastic Load Balancer:
 
 ```sh
-sh run-client.sh [Terraform](https://terraform.io/)-example-elb-1103743156.eu-west-1.elb.amazonaws.com
+sh run-client.sh terraform-example-elb-1103743156.eu-west-1.elb.amazonaws.com
 ```
 
-And it will show the result of the exection in the server:
+This command will send a SOAP request to the Elastic Load Balancer, the ELB will proxy the request to an instance (in this case there is only one in execution), the WSO2 ESB will log the input and ouput, and proxy to the Axis Server, and return the results to the client. In the WSO2 ESB management console we can see the logs:
 
 ![logs] (/media/posts/terraform-aws-wso2-esb-docker-sample/wso2-esb-logs.png)
 
  
 ### Remove resources:
 
-Finally we can destroy the resources created in AWS, first we can ask to the plan what is going to be destroyed:
+For avoid charges in our AWS account, finally we can destroy the resources created, first we can ask to the plan what is going to be destroyed:
 
 ```sh
 docker run \
@@ -395,7 +395,7 @@ docker run \
     -var 'key_name=keypar2' -var 'key_path=/data-ssl/keypar2.pem'
 ```
 
-And destroy it with the destroy instruction, using [Docker](https://www.docker.com/) it's necessary to add the -force flag.
+And remove everything with the destroy instruction, using [Docker](https://www.docker.com/) it's necessary to add the -force flag.
 
 ```sh
 docker run \
@@ -409,11 +409,11 @@ docker run \
 
 # Conclusion
 
-This is a very simple example of the use of [Terraform](https://terraform.io/) and [Docker](https://www.docker.com/) as infrastructure as code, in a real project it will be more complex and use other layers as database, etc. But we can have an ide how to start an infrastucture as code. 
+This is a very simple example of the use of [Terraform](https://terraform.io/) and [Docker](https://www.docker.com/) as infrastructure as code, in a real project it will be more complex and use other layers as database, etc. We can also use other interesting features like autoscale, or use terraform with other providers, or have the infrastucture using different providers at the same time. 
 
-Terraform will also allow to do modifications using the concept of state. The infrastructure as code will simplify our future changes, and gives and easy way to see our infrasctructure, and know wich resources we are using.
+Terraform will also allow to do modifications using the concept of [state](https://terraform.io/docs/state/index.html). The infrastructure as code will simplify our future changes, and gives and easy way to see our infrasctructure, and know wich resources we are using.
 
-With the stateless services concepts using [Docker](https://www.docker.com/) will be more simple to escalate our system simply adding new services in a very simple way.s
+With the stateless instances concept using [Docker](https://www.docker.com/) will be more simple to escalate our infrastructure simply adding new services in a very simple way.
 
 ## Resources
 
