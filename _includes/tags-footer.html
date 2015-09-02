@@ -1,0 +1,15 @@
+ {% if page.tags.size > 0 %}
+<br/>
+	<div class="panel">
+TAGS:
+        	<div class="tags">
+     {% for post_tag in page.tags %}
+		<i>
+     	<a href="/tags#{{ post_tag }}-ref">[{{ post_tag }}]</a>
+		</i>
+     {% endfor %}
+          	</div>
+ {% else %}
+     {% assign tags_content = '' %}
+     </div>
+ {% endif %}

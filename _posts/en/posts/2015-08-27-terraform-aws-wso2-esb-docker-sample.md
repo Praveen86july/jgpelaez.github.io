@@ -7,6 +7,7 @@ author: "Juan Carlos G. Peláez"
 comments: true
 header-img: "media/background/plane-clouds.jpg"
 tags: [terraform, aws, docker, wso2 esb, esb]
+tagsEn: [terraform, aws, docker, wso2 esb, esb]
 ---
 
 One of the good practices in a data center or a cloud infrastructure is to manage the [infrastructure as code]

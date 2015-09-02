@@ -5,6 +5,7 @@ subtitle:   ""
 date:       2015-07-11 12:00:00
 author:     "Juan Carlos G. Peláez"
 comments: true
+tags: [terraform, docker, wso2 esb, esb]
 ---
 
 ## Introducción
